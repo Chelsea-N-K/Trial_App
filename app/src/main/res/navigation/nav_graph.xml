@@ -7,8 +7,8 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.example.trial_app.Registration"
-        tools:layout="@layout/fragment_first">
+        android:name="com.example.trial_app.ProvidersRegistration"
+        tools:layout="@layout/provider_registration">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
