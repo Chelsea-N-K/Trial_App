@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import com.example.trial_app.models.PatientModal
 
 class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
@@ -180,15 +181,5 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
     }
 }
 
-class PatientModal(
-    string: String,
-    string1: String,
-    string2: String,
-    string3: String,
-    string4: String,
-    string5: String,
-    string6: String,
-    string7: String
-) {
 
-}
+

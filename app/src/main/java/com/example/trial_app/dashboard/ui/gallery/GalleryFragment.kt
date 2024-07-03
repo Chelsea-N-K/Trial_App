@@ -1,7 +1,6 @@
 package com.example.trial_app.dashboard.ui.gallery
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,7 @@ import androidx.fragment.app.Fragment
 import com.example.trial_app.DBHandler
 import com.example.trial_app.R
 import com.example.trial_app.R.layout
-import com.example.trial_app.dashboard.ui.slideshow.PatientsDisplay
+
 
 class GalleryFragment : Fragment() {
 
@@ -131,8 +130,8 @@ class GalleryFragment : Fragment() {
 
         viewPatientBtn.setOnClickListener {
             // Opening a new activity via an intent.
-            val intent = Intent(requireContext(), PatientsDisplay::class.java)
-            startActivity(intent)
+           // val intent = Intent(requireContext(), PatientsDisplay::class.java)
+           // startActivity(intent)
         }
     }
 }

@@ -16,10 +16,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-/*
-        //Initiate binding
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+/*
+        //Initiate binding
+
 
         //Initialize the listview and adapter with a non-null list
         val usersList = listOf(User("John Doe"), User("Jane Doe"))
