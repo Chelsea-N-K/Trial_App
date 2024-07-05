@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trial_app.DBHandler
 import com.example.trial_app.adapters.PatientRVAdapter
 import com.example.trial_app.databinding.ViewPatientBinding
-import com.example.trial_app.models.PatientModal
+import com.example.trial_app.modals.PatientModal
 
 class ViewPatients : Fragment() {
 
@@ -57,7 +57,7 @@ class ViewPatients : Fragment() {
         // Setting our adapter to recycler view.
         patientsRV.adapter = patientRVAdapter
     }
-    }
+}
 
 
 

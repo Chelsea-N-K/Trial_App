@@ -1,13 +1,15 @@
 package com.example.trial_app.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.trial_app.R
-import com.example.trial_app.models.PatientModal
+import com.example.trial_app.UpdatePatientActivity
+import com.example.trial_app.modals.PatientModal
 
 
     class PatientRVAdapter(
@@ -16,13 +18,13 @@ import com.example.trial_app.models.PatientModal
     ) : RecyclerView.Adapter<PatientRVAdapter.ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            // Inflating our layout file for our recycler view items.
+            // Inflate the layout file for the recycler view items.
             val view = LayoutInflater.from(parent.context).inflate(R.layout.patients_display_item, parent, false)
             return ViewHolder(view)
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            // Setting data to our views of recycler view item.
+            // Set data to the views of recycler view item.
             val modal = patientModalArrayList[position]
             holder.patientFirstNameTV.text = modal.patientFirstName
             holder.patientMiddleNameTV.text = modal.patientMiddleName
@@ -32,15 +34,34 @@ import com.example.trial_app.models.PatientModal
             holder.patientTemperatureTV.text = modal.patientTemperature
             holder.patientHeightTV.text = modal.patientHeight
             holder.patientWeightTV.text = modal.patientWeight
+
+            // Add an onClick listener for the recycler view item.
+            holder.itemView.setOnClickListener {
+                // Call an intent.
+                val intent = Intent(context, UpdatePatientActivity::class.java)
+
+                // Pass all the values.
+                intent.putExtra("first_name", modal.patientFirstName)
+                intent.putExtra("middle_name", modal.patientMiddleName)
+                intent.putExtra("last_name", modal.patientLastName)
+                intent.putExtra("id_number", modal.patientIdNumber)
+                intent.putExtra("telephone", modal.patientTelephone)
+                intent.putExtra("temperature", modal.patientTemperature)
+                intent.putExtra("height", modal.patientHeight)
+                intent.putExtra("weight", modal.patientWeight)
+                // Start the activity.
+                context.startActivity(intent)
+            }
+
         }
 
         override fun getItemCount(): Int {
-            // Returning the size of our array list
+            // Return the size of our array list
             return patientModalArrayList.size
         }
 
         inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            // Creating variables for our text views.
+            // Create variables for our text views.
             val patientFirstNameTV: TextView = itemView.findViewById(R.id.patientFirstNameView)
             val patientMiddleNameTV: TextView = itemView.findViewById(R.id.patientMiddleNameView)
             val patientLastNameTV: TextView = itemView.findViewById(R.id.patientLastNameView)

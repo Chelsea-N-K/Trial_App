@@ -1,4 +1,4 @@
-package com.example.trial_app.models
+package com.example.trial_app.modals
 
 data class PatientModal(
     val patientFirstName: String,

@@ -4,7 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.trial_app.models.PatientModal
+import com.example.trial_app.modals.PatientModal
 
 class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION) {
 
@@ -93,7 +93,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        // Create table SQL query
+        // Create table - SQL query
         val query = ("CREATE TABLE " + TABLE_NAME + " ("
                 + ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FIRST_NAME_COL + " TEXT,"
@@ -172,6 +172,41 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         cursorPatients.close()
         return patientModalArrayList
     }
+
+    fun updatePatient(originalPatientName: String, patientFirstName: String, patientMiddleName: String,
+                      patientLastName: String, patientIdNumber: String, patientTelephone: String,
+                      patientTemperature: String, patientHeight: String, patientWeight: String) {
+
+        // Calling a method to get writable database.
+        val db = this.writableDatabase
+        val values = ContentValues()
+
+        // Pass all values along with its key and value pair.
+        values.put(FIRST_NAME_COL, patientFirstName)
+        values.put(MIDDLE_NAME_COL, patientMiddleName)
+        values.put(LAST_NAME_COL, patientLastName)
+        values.put(PASSPORT_COL, patientIdNumber)
+        values.put(TELEPHONE_COL, patientTelephone)
+        values.put(TEMPERATURE_COL, patientTemperature)
+        values.put(HEIGHT_COL, patientHeight)
+        values.put(WEIGHT_COL, patientWeight)
+
+        // Call an update method to update the database and pass the values.
+        // Compare it with the name of the patient which is stored in the original name variable.
+        db.update(TABLE_NAME, values, "name=?", arrayOf(originalPatientName))
+        db.close()
+    }
+
+    fun deletePatient(patientFirstName: String) {
+        // Creating a variable to write to our database.
+        val db = this.writableDatabase
+
+        // Calling a method to delete the patient and comparing it with the patient's first name.
+        db.delete(TABLE_NAME, "name=?", arrayOf(patientFirstName))
+        db.close()
+    }
+
+
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Drop older table if it existed
