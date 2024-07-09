@@ -10,7 +10,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
 
     companion object {
         // Database Name
-        private const val DB_NAME = "healthcaredb"
+        private const val DB_NAME = "patientsdb"
 
         // Database Version
         private const val DB_VERSION = 1

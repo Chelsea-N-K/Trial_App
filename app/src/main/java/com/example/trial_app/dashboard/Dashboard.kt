@@ -28,7 +28,7 @@ class Dashboard : AppCompatActivity() {
         setSupportActionBar(binding.appBarDashboard.toolbar)
 
         binding.appBarDashboard.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+            Snackbar.make(view, "Add a new patient", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
                 .setAnchorView(R.id.fab).show()
         }
