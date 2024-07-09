@@ -21,7 +21,7 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_second)
+        setContentView(R.layout.provider_registration)
 
         dbHelper = DBHelper(this@RegisterActivity)
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)

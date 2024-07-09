@@ -16,7 +16,7 @@ import com.example.trial_app.R.layout
 import com.example.trial_app.dashboard.Dashboard
 
 
-class GalleryFragment : Fragment() {
+class PatientRegistration : Fragment() {
 
     // Creating variables for the edit texts, button and db handler
     private lateinit var patientFirstNameEdt: EditText
@@ -38,7 +38,7 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         //return super.onCreateView(inflater, container, savedInstanceState)
-        val view = inflater.inflate(layout.fragment_gallery, container, false)
+        val view = inflater.inflate(layout.patient_registration, container, false)
 
         // Initializing all variables.
         patientFirstNameEdt = view.findViewById(R.id.patientFirstName)

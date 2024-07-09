@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.trial_app.UsersDetailActivity"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/provider_registration">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
