@@ -1,4 +1,4 @@
-package com.example.trial_app
+package com.example.trial_app.auth
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -7,23 +7,27 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import com.example.trial_app.DBHandler
+import com.example.trial_app.R
+import com.example.trial_app.utils.AppUtils
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
 class RegisterActivity : AppCompatActivity() {
 
-    private lateinit var dbHelper: DBHelper
+    private lateinit var dbHelper: DBHandler
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.provider_registration)
 
-        dbHelper = DBHelper(this@RegisterActivity)
+        dbHelper = DBHandler(this@RegisterActivity)
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
         val providerFirstName: EditText = findViewById(R.id.providerFirstName)
@@ -34,6 +38,11 @@ class RegisterActivity : AppCompatActivity() {
         val providerConfirmPassword: EditText = findViewById(R.id.providerConfirmPassword)
         val spinnerRole: Spinner = findViewById(R.id.spinnerRole)
         val btnRegister: Button = findViewById(R.id.btnRegister)
+        val loginLink = findViewById<TextView>(R.id.loginLink)
+
+        loginLink.setOnClickListener{
+           finish()
+        }
 
         // Populate spinner with role options
         val roleOptions = arrayOf("Nurse", "Doctor", "Dentist", "Oncologist")
@@ -58,12 +67,13 @@ class RegisterActivity : AppCompatActivity() {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             } else {
                 val userId =
-                    dbHelper.registerProvider(firstName, lastName, email, telephone, password, role)
+                    dbHelper.registerProvider(firstName, lastName, email, telephone, AppUtils().encryptPassword(password),
+                        role)
                 if (userId > -1) {
                     // Save user info in SharedPreferences
                     val editor = sharedPreferences.edit()
                     editor.putString("email", email)
-                    editor.putString("password", password)
+                    editor.putString("password", AppUtils().encryptPassword(password))
                     editor.putString("roleOptions", role)
                     editor.apply()
 

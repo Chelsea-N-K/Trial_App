@@ -11,16 +11,18 @@
         tools:layout="@layout/provider_registration">
 
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_FirstFragment_to_loginActivity2"
+            app:destination="@id/loginActivity2" />
     </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.trial_app.UsersDetailActivity"
-        tools:layout="@layout/provider_registration">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
+    <activity
+        android:id="@+id/loginActivity2"
+        android:name="com.example.trial_app.auth.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+    <fragment
+        android:id="@+id/viewPatients"
+        android:name="com.example.trial_app.dashboard.ui.home.ViewPatients"
+        android:label="view_patient"
+        tools:layout="@layout/view_patient" />
 </navigation>

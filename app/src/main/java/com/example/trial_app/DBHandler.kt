@@ -13,7 +13,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         private const val DB_NAME = "patientsdb"
 
         // Database Version
-        private const val DB_VERSION = 1
+        private const val DB_VERSION = 2
 
         /*
         // Table Name
@@ -77,7 +77,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         db.close()
     }*/
         // Table Name
-        private const val TABLE_NAME = "patients"
+        private const val TABLE_PATIENTS_NAME = "patients"
 
         // Column Names
         private const val ID_COL = "Patient_ID"
@@ -90,11 +90,20 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         private const val HEIGHT_COL = "Height"
         private const val WEIGHT_COL = "Weight"
 
+        const val TABLE_PROVIDER_NAME = "providers"
+        const val COLUMN_ID = "id"
+        const val COLUMN_FIRST_NAME = "first_name"
+        const val COLUMN_LAST_NAME = "last_name"
+        const val COLUMN_EMAIL = "email"
+        const val COLUMN_TELEPHONE = "telephone"
+        const val COLUMN_PASSWORD = "password"
+        const val COLUMN_ROLE = "role"
+
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         // Create table - SQL query
-        val query = ("CREATE TABLE " + TABLE_NAME + " ("
+        val query = ("CREATE TABLE " + TABLE_PATIENTS_NAME + " ("
                 + ID_COL + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + FIRST_NAME_COL + " TEXT,"
                 + MIDDLE_NAME_COL + " TEXT,"
@@ -104,7 +113,17 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
                 + TEMPERATURE_COL + " DOUBLE,"
                 + HEIGHT_COL + " DOUBLE,"
                 + WEIGHT_COL + " DOUBLE)")
-        db.execSQL(query) //Executes above query
+
+        val createTable = "CREATE TABLE $TABLE_PROVIDER_NAME (" +
+                "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "$COLUMN_FIRST_NAME TEXT, " +
+                "$COLUMN_LAST_NAME TEXT, " +
+                "$COLUMN_EMAIL TEXT, " +
+                "$COLUMN_TELEPHONE TEXT, " +
+                "$COLUMN_PASSWORD TEXT, " +
+                "$COLUMN_ROLE TEXT)"
+        db.execSQL(query)
+        db.execSQL(createTable)//Executes above query
     }
 
 
@@ -131,7 +150,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         values.put(WEIGHT_COL, patientWeight)
 
         // Insert values into the table
-        db.insert(TABLE_NAME, null, values)
+        db.insert(TABLE_PATIENTS_NAME, null, values)
 
         // Close the database
         db.close()
@@ -143,7 +162,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         val db = this.readableDatabase
 
         // Create a cursor with query to read data from database.
-        val cursorPatients = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+        val cursorPatients = db.rawQuery("SELECT * FROM $TABLE_PATIENTS_NAME", null)
 
         // Create a new array list.
         val patientModalArrayList = ArrayList<PatientModal>()
@@ -173,6 +192,25 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         return patientModalArrayList
     }
 
+    // Function to get patient's weight and height by ID
+    fun getPatientDetails(patientId: Int): Pair<Double, Double>? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            TABLE_PATIENTS_NAME, arrayOf(WEIGHT_COL, HEIGHT_COL),
+            "$ID_COL=?", arrayOf(patientId.toString()), null, null, null, null
+        )
+        cursor?.moveToFirst()
+        return if (cursor != null && cursor.count > 0) {
+            val weight = cursor.getDouble(cursor.getColumnIndexOrThrow(WEIGHT_COL))
+            val height = cursor.getDouble(cursor.getColumnIndexOrThrow(HEIGHT_COL))
+            cursor.close()
+            Pair(weight, height)
+        } else {
+            cursor?.close()
+            null
+        }
+    }
+
     fun updatePatient(originalPatientName: String, patientFirstName: String, patientMiddleName: String,
                       patientLastName: String, patientIdNumber: String, patientTelephone: String,
                       patientTemperature: String, patientHeight: String, patientWeight: String) {
@@ -193,7 +231,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
 
         // Call an update method to update the database and pass the values.
         // Compare it with the name of the patient which is stored in the original name variable.
-        db.update(TABLE_NAME, values, "name=?", arrayOf(originalPatientName))
+        db.update(TABLE_PATIENTS_NAME, values, "name=?", arrayOf(originalPatientName))
         db.close()
     }
 
@@ -202,7 +240,7 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
         val db = this.writableDatabase
 
         // Calling a method to delete the patient and comparing it with the patient's first name.
-        db.delete(TABLE_NAME, "name=?", arrayOf(patientFirstName))
+        db.delete(TABLE_PATIENTS_NAME, "name=?", arrayOf(patientFirstName))
         db.close()
     }
 
@@ -210,11 +248,34 @@ class DBHandler(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         // Drop older table if it existed
-        db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_PATIENTS_NAME")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_PROVIDER_NAME")
         // Create tables again
         onCreate(db)
     }
+
+    fun registerProvider(firstName: String, lastName: String, email: String, telephone: String, password: String,
+                         role: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues()
+        contentValues.put(COLUMN_FIRST_NAME, firstName)
+        contentValues.put(COLUMN_LAST_NAME, lastName)
+        contentValues.put(COLUMN_EMAIL, email)
+        contentValues.put(COLUMN_TELEPHONE, telephone)
+        contentValues.put(COLUMN_PASSWORD, password)
+        contentValues.put(COLUMN_ROLE, role)
+        val result = db.insert(TABLE_PROVIDER_NAME, null, contentValues)
+        db.close()
+        return result
+    }
+
+    fun authenticateUser(email: String, password: String): Boolean {
+        val db = this.readableDatabase
+        val cursor = db.query(TABLE_PROVIDER_NAME, arrayOf(COLUMN_ID), "$COLUMN_EMAIL=? AND $COLUMN_PASSWORD=?",
+            arrayOf(email, password), null, null, null)
+        val result = cursor.count > 0
+        cursor.close()
+        db.close()
+        return result
+    }
 }
-
-
-

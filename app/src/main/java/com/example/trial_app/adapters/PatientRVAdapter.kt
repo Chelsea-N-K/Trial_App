@@ -10,9 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trial_app.R
 import com.example.trial_app.UpdatePatientActivity
 import com.example.trial_app.modals.PatientModal
+import com.example.trial_app.utils.AppUtils
 
 
-    class PatientRVAdapter(
+class PatientRVAdapter(
         private val patientModalArrayList: ArrayList<PatientModal>,
         private val context: Context
     ) : RecyclerView.Adapter<PatientRVAdapter.ViewHolder>() {
@@ -34,6 +35,12 @@ import com.example.trial_app.modals.PatientModal
             holder.patientTemperatureTV.text = modal.patientTemperature
             holder.patientHeightTV.text = modal.patientHeight
             holder.patientWeightTV.text = modal.patientWeight
+
+            val patient_Height = modal.patientHeight.toDouble()
+            val patient_Weight = modal.patientWeight.toDouble()
+            val bmi = AppUtils().calculateBMI(patient_Weight, patient_Height)
+
+            holder.patientBMITV.text = "$bmi"
 
             // Add an onClick listener for the recycler view item.
             holder.itemView.setOnClickListener {
@@ -70,6 +77,7 @@ import com.example.trial_app.modals.PatientModal
             val patientTemperatureTV: TextView = itemView.findViewById(R.id.patientTemperatureView)
             val patientHeightTV: TextView = itemView.findViewById(R.id.patientHeightView)
             val patientWeightTV: TextView = itemView.findViewById(R.id.patientWeightView)
+            val patientBMITV: TextView = itemView.findViewById(R.id.patientBMI)
 
         }
     }
